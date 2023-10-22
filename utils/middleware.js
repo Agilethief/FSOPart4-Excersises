@@ -1,4 +1,3 @@
-const { request } = require("express");
 const logger = require("./logger");
 
 const requestLogger = (request, response, next) => {
