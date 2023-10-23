@@ -3,6 +3,7 @@ const totalLikes =
   require("../utils/list_helper").totalLikes;
 const GetFavouriteBlog =
   require("../utils/list_helper").GetFavouriteBlog;
+const listHelper = require("../utils/list_helper");
 
 const listWithOneBlog = [
   {
@@ -15,7 +16,7 @@ const listWithOneBlog = [
   },
 ];
 
-const listWithThreeBlogs = [
+const listWithFourBlogs = [
   {
     _id: "5a422aa71b54a676234d17f9",
     title: "Blog 1",
@@ -35,12 +36,22 @@ const listWithThreeBlogs = [
   {
     _id: "5a422aa71b54a676234d17f8",
     title: "Blog 3",
-    author: "Edsger W. Dijkstra",
+    author: "Author 2",
     url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
     likes: 2,
     __v: 0,
   },
+  {
+    _id: "5a422aa71b54a676234d17f7",
+    title: "Blog 4",
+    author: "Author 3",
+    url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
+    likes: 1,
+    __v: 0,
+  },
 ];
+
+console.log("LOG: Starting tests");
 
 describe("dummy", () => {
   test("returns one", () => {
@@ -64,8 +75,8 @@ describe("Total Likes", () => {
     expect(result).toBe(5);
   });
   test("List with three blog that has 10 tota; likes", () => {
-    const result = totalLikes(listWithThreeBlogs);
-    expect(result).toBe(10);
+    const result = totalLikes(listWithFourBlogs);
+    expect(result).toBe(11);
   });
 });
 
@@ -74,7 +85,6 @@ describe("Get favourite blog", () => {
     const blogs = [];
 
     const result = GetFavouriteBlog(blogs);
-    console.log(result);
     expect(result).toBe(null);
   });
 
@@ -82,8 +92,40 @@ describe("Get favourite blog", () => {
     const result = GetFavouriteBlog(listWithOneBlog);
     expect(result.title).toEqual("Blog 1");
   });
-  test("Favourite blog of three blogs that has 10 total likes", () => {
-    const result = GetFavouriteBlog(listWithThreeBlogs);
+  test("Favourite blog of four blogs that has 10 total likes", () => {
+    const result = GetFavouriteBlog(listWithFourBlogs);
     expect(result.title).toEqual("Blog 1");
+  });
+});
+
+describe("Get most blogs", () => {
+  test("Most blogs with no blogs", () => {
+    const blogs = [];
+
+    const result = listHelper.GetMostBlogs(blogs);
+    expect(result).toBe(null);
+  });
+
+  test("Get most blogs from four long list", () => {
+    const result = listHelper.GetMostBlogs(
+      listWithFourBlogs
+    );
+    expect(result.author).toEqual("Edsger W. Dijkstra");
+  });
+});
+
+describe("Get most likes by author", () => {
+  test("Check with no blogs", () => {
+    const blogs = [];
+
+    const result = listHelper.GetMostLikes(blogs);
+    expect(result).toBe(null);
+  });
+
+  test("Get most likes by author from four long list", () => {
+    const result = listHelper.GetMostLikes(
+      listWithFourBlogs
+    );
+    expect(result.author).toEqual("Edsger W. Dijkstra");
   });
 });
