@@ -11,7 +11,9 @@ blogsRouter.get("/", async (request, response) => {
 
 // Get a single blog
 blogsRouter.get("/:id", async (request, response) => {
-  const blog = await Blog.findByID(request.params.id);
+  console.log("Blog ID ", request.params.id);
+  const blog = await Blog.findById(request.params.id);
+  console.log("Blog", blog);
   if (blog) {
     response.json(blog);
   } else {
@@ -20,7 +22,7 @@ blogsRouter.get("/:id", async (request, response) => {
 });
 
 // Post a new blog
-blogsRouter.post("/", async (request, response, error) => {
+blogsRouter.post("/", async (request, response) => {
   const body = request.body;
 
   const newBlog = new Blog({

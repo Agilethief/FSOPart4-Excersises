@@ -52,14 +52,65 @@ test("A valid blog can be added ", async () => {
     .expect(201)
     .expect("Content-Type", /application\/json/);
 
-  const notesAtEnd = await helper.blogsInDB();
+  const blogsAtEnd = await helper.blogsInDB();
 
-  expect(notesAtEnd).toHaveLength(
+  expect(blogsAtEnd).toHaveLength(
     helper.initialBlog.length + 1
   );
 
-  const titles = notesAtEnd.map(
+  const titles = blogsAtEnd.map(
     (blogTitle) => blogTitle.title
   );
   expect(titles).toContain("Test title1");
+});
+
+test("Blog without content is not added", async () => {
+  const newBlog = {
+    likes: 99,
+  };
+
+  await api.post("/api/blogs").send(newBlog).expect(400);
+
+  const blogsAtEnd = await helper.blogsInDB();
+
+  expect(blogsAtEnd).toHaveLength(
+    helper.initialBlog.length
+  );
+});
+
+test("A specific blog can be viewed", async () => {
+  const blogsAtStart = await helper.blogsInDB();
+
+  const blogToView = blogsAtStart[0];
+  //console.log("blog", blogToView);
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect("Content-Type", /application\/json/);
+
+  expect(resultBlog.body).toEqual(blogToView);
+});
+
+test("A blog can be deleted", async () => {
+  const blogsAtStart = await helper.blogsInDB();
+  const blogToDelete = blogsAtStart[0];
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204);
+
+  const blogsAtEnd = await helper.blogsInDB();
+
+  expect(blogsAtEnd).toHaveLength(
+    helper.initialBlog.length - 1
+  );
+
+  const titles = blogsAtEnd.map((r) => r.title);
+
+  expect(titles).not.toContain(blogToDelete.title);
+});
+
+afterAll(async () => {
+  await mongoose.connection.close();
 });
