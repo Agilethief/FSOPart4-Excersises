@@ -2,27 +2,25 @@ const blogsRouter = require("express").Router();
 const Blog = require("../models/blog");
 
 // Get all blogs
-blogsRouter.get("/", (request, response) => {
-  Blog.find({}).then((blogs) => {
+blogsRouter.get("/", async (request, response) => {
+  const blogs = await Blog.find({});
+  if (blogs) {
     response.json(blogs);
-  });
+  }
 });
 
 // Get a single blog
-blogsRouter.get("/:id", (request, response, next) => {
-  Blog.findById(request.params.id)
-    .then((blog) => {
-      if (blog) {
-        response.json(blog);
-      } else {
-        response.status(404).end();
-      }
-    })
-    .catch((error) => next(error));
+blogsRouter.get("/:id", async (request, response) => {
+  const blog = await Blog.findByID(request.params.id);
+  if (blog) {
+    response.json(blog);
+  } else {
+    response.status(404).end();
+  }
 });
 
 // Post a new blog
-blogsRouter.post("/", (request, response, error) => {
+blogsRouter.post("/", async (request, response, error) => {
   const body = request.body;
 
   const newBlog = new Blog({
@@ -32,12 +30,8 @@ blogsRouter.post("/", (request, response, error) => {
     likes: body.likes,
   });
 
-  newBlog
-    .save()
-    .then((savedBlog) => {
-      response.status(201).json(savedBlog);
-    })
-    .catch((error) => next(error));
+  const savedBlog = await newBlog.save();
+  response.status(201).json(savedBlog);
 });
 
 // Delete a blog
