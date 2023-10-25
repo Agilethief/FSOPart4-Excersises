@@ -16,6 +16,17 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3002/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Test title1",
+  "author": "Test author",
+  
+  "likes": 123
+}
+
+###
 DELETE http://localhost:3002/api/blogs/6534bea004778a3c70ac5fd8
 
 ###
