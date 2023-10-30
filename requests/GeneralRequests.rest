@@ -39,3 +39,18 @@ Content-Type: application/json
   "url": "www.test.com",
   "likes": 123
 }
+
+###
+#Get all users
+GET http://localhost:3002/api/users
+
+###
+# Create a user
+POST http://localhost:3002/api/users
+Content-Type: application/json
+
+{
+  "username": "user2",
+  "password": "pass2",
+  "name": "NameOfUser"
+}
